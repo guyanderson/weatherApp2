@@ -1,7 +1,6 @@
 {
   "name": "calculator",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +8,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "bower-files": "^4.0.0",
+    "browser-sync": "^2.18.12",
     "browserify": "^14.4.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
@@ -18,5 +19,19 @@
     "gulp-util": "^3.0.8",
     "jshint": "^2.9.5",
     "vinyl-source-stream": "^1.1.0"
-  }
+  },
+  "dependencies": {
+    "bower-files": "^4.0.0",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moodyan/JS-pingpong.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moodyan/JS-pingpong/issues"
+  },
+  "homepage": "https://github.com/moodyan/JS-pingpong#readme",
+  "description": ""
 }
