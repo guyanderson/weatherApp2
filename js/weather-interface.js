@@ -1,7 +1,3 @@
-$(document).ready(function(){
-  $('#time').text(moment());
-});
-
 var Weather = require('./../js/weather.js').weatherModule;
 
 var displayHumidity = function(city, humidityData) {

@@ -1,1 +1,40 @@
-!function n(o,t,e){function r(i,p){if(!t[i]){if(!o[i]){var a="function"==typeof require&&require;if(!p&&a)return a(i,!0);if(u)return u(i,!0);var f=new Error("Cannot find module '"+i+"'");throw f.code="MODULE_NOT_FOUND",f}var c=t[i]={exports:{}};o[i][0].call(c.exports,function(n){var t=o[i][1][n];return r(t||n)},c,c.exports,n,o,t,e)}return t[i].exports}for(var u="function"==typeof require&&require,i=0;i<e.length;i++)r(e[i]);return r}({1:[function(n,o,t){function e(n){this.skin=n}e.prototype.pingPong=function(n){for(var o=[],t=1;t<=n;t++)t%15==0?o.push("ping-pong"):t%3==0?o.push("ping"):t%5==0?o.push("pong"):o.push(t);return o},t.calculatorModule=e},{}],2:[function(n,o,t){var e=n("./../js/pingpong.js").calculatorModule;$(document).ready(function(){$("#ping-pong-form").submit(function(n){n.preventDefault();var o=$("#goal").val();new e("hot pink").pingPong(o).forEach(function(n){$("#solution").append("<li>"+n+"</li>")})})}),$(document).ready(function(){$("#signup").submit(function(n){n.preventDefault();var o=$("#email").val();$("#signup").hide(),$("#solution").prepend("<p>Thank you, "+o+" has been added to our list!</p>")})}),$(document).ready(function(){$("#time").text(moment())})},{"./../js/pingpong.js":1}]},{},[2]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+exports.apiKey = "b75cd2974e806c93645135e29a825fd8";
+
+},{}],2:[function(require,module,exports){
+var apiKey = require('./../.env').apiKey;
+
+Weather = function(){
+};
+
+Weather.prototype.getWeather = function(city, displayHumidity) {
+  $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey).then(function(response) {
+    displayHumidity(city, response.main.humidity);
+  }).fail(function(error) {
+    $('.showWeather').text(error.responseJSON.message);
+  });
+};
+
+exports.weatherModule = Weather;
+
+},{"./../.env":1}],3:[function(require,module,exports){
+$(document).ready(function(){
+  $('#time').text(moment());
+});
+
+var Weather = require('./../js/weather.js').weatherModule;
+
+var displayHumidity = function(city, humidityData) {
+  $('.showWeather').text("The humidity in " + city + " is " + humidityData + "%");
+};
+
+$(document).ready(function() {
+  var currentWeatherObject = new Weather();
+  $('#weather-location').click(function() {
+    var city = $('#location').val();
+    $('#location').val("");
+    currentWeatherObject.getWeather(city, displayHumidity);
+  });
+});
+
+},{"./../js/weather.js":2}]},{},[3]);
