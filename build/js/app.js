@@ -4,37 +4,86 @@ exports.apiKey = "b75cd2974e806c93645135e29a825fd8";
 },{}],2:[function(require,module,exports){
 var apiKey = require('./../.env').apiKey;
 
-Weather = function(){
+Humidity = function(){
 };
 
-Weather.prototype.getWeather = function(city, displayHumidity) {
+Humidity.prototype.getHumidity = function(city, displayHumidity) {
   $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey).then(function(response) {
     displayHumidity(city, response.main.humidity);
+    
   }).fail(function(error) {
-    $('.showWeather').text(error.responseJSON.message);
+    $('.showHumidity').text(error.responseJSON.message);
   });
 };
 
-exports.weatherModule = Weather;
+exports.humidityModule = Humidity;
 
 },{"./../.env":1}],3:[function(require,module,exports){
+var apiKey = require('./../.env').apiKey;
+
+Temperature = function(){
+};
+
+Temperature.prototype.getTemperatureCelsius = function(city, displayTempInC) {
+  $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey).then(function(response) {
+    displayTempInC(city, ((response.main.temp) - 273.15).toFixed(2));
+  }).fail(function(error) {
+    $('.showTemperature').text(error.responseJSON.message);
+  });
+};
+
+Temperature.prototype.getTemperatureFahrenheit = function(city, displayTempInF) {
+  $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey).then(function(response) {
+    displayTempInF(city, ((response.main.temp) * (9/5) - 459.67).toFixed(2));
+  }).fail(function(error) {
+    $('.showTemperature').text(error.responseJSON.message);
+  });
+};
+
+exports.temperatureModule = Temperature;
+
+},{"./../.env":1}],4:[function(require,module,exports){
+var Humidity = require('./../js/humidity.js').humidityModule;
+
+var displayHumidity = function(city, humidityData) {
+  $('.showHumidity').text("The humidity in " + city + " is " + humidityData + "%");
+};
+
+$(document).ready(function() {
+  var currentHumidityObject = new Humidity();
+  $('#weather-location').click(function() {
+    var city = $('#location').val();
+    // $('#location').val("");
+    currentHumidityObject.getHumidity(city, displayHumidity);
+  });
+});
+
+var Temperature = require('./../js/temperature.js').temperatureModule;
+
+var displayTempInC = function(city, temperatureData) {
+  $('.showTemperature').text("The temperature in " + city + " is " + temperatureData + " degrees Celsius");
+};
+
+var displayTempInF = function(city, temperatureData) {
+  $('.showTemperature').text("The temperature in " + city + " is " + temperatureData + " degrees Fahrenheit");
+};
+
+$(document).ready(function() {
+  var currentTemperatureObject = new Temperature();
+  $('#weather-location').click(function(event) {
+    event.preventDefault();
+    var city = $('#location').val();
+    if ($('#temperature').val() === "celsius") {
+      currentTemperatureObject.getTemperatureCelsius(city, displayTempInC);
+    }
+    if ($('#temperature').val() === "fahrenheit") {
+      currentTemperatureObject.getTemperatureFahrenheit(city, displayTempInF);
+    }
+  });
+});
+
 $(document).ready(function(){
   $('#time').text(moment());
 });
 
-var Weather = require('./../js/weather.js').weatherModule;
-
-var displayHumidity = function(city, humidityData) {
-  $('.showWeather').text("The humidity in " + city + " is " + humidityData + "%");
-};
-
-$(document).ready(function() {
-  var currentWeatherObject = new Weather();
-  $('#weather-location').click(function() {
-    var city = $('#location').val();
-    $('#location').val("");
-    currentWeatherObject.getWeather(city, displayHumidity);
-  });
-});
-
-},{"./../js/weather.js":2}]},{},[3]);
+},{"./../js/humidity.js":2,"./../js/temperature.js":3}]},{},[4]);
